@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "ASPNet-Vue.Server\\ASPNet-Vue.Server.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "aspnet-vue.client\\aspnet-vue.client.esproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

@@ -1,0 +1,5 @@
+/ASPNet-Vue.Server/obj
+/ASPNet-Vue.Server/bin
+/aspnet-vue.client/obj
+/aspnet-vue.client/.vscode
+/aspnet-vue.client/node_modules
