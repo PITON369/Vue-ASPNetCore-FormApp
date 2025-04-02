@@ -22,7 +22,7 @@
       </div>
 
       <div class="form-group radio-checkbox-group">
-        <label>Пол:</label>
+        <label>Gender:</label>
         <div class="radio-buttons">
           <label for="male">Male</label>
           <input type="radio" id="male" value="male" v-model="formData.gender" required />
@@ -69,17 +69,23 @@
     },
     methods: {
       async submitForm() {
-        const response = await fetch('/api/submissions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(this.formData),
-        });
-        //if (response.ok) { // todo uncomment it after adding the DB
+        try {
+          const response = await fetch('/api/submissions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(this.formData),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Error: ${response.status} - ${errorText}`);
+          }
+
           this.$router.push('/submissions');
-        //}
-        console.log(this.formData);
+        } catch (error) {
+          console.error('Form error:', error);
+          alert(`Form error: ${error.message}`);
+        }
       }
     }
   };

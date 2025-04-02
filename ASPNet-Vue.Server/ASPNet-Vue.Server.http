@@ -1,6 +1,6 @@
 @ASPNet_Vue.Server_HostAddress = http://localhost:5064
 
-GET {{ASPNet_Vue.Server_HostAddress}}/weatherforecast/
+GET {{ASPNet_Vue.Server_HostAddress}}/api/
 Accept: application/json
 
 ###

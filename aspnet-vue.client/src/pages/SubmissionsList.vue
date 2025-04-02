@@ -3,17 +3,19 @@
 
   const submissions = ref([]);
   const errorMessage = ref('');
+  const headers = ref([]);
 
   onMounted(async () => {
     try {
-      const response = await fetch('/api/submissions'); // todo change to real API
+      const response = await fetch('/api/submissions');
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+      const data = await response.json();
+      submissions.value = data;
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Load error: ${response.status} - ${errorText}`);
+      // Extract headers from the first submission
+      if (data.length > 0) {
+        headers.value = Object.keys(data[0].data);
       }
-
-      submissions.value = await response.json();
     } catch (error) {
       console.error('Error when uploading data:', error);
       errorMessage.value = 'The data could not be uploaded. Try again later.';
@@ -32,13 +34,13 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Data</th>
+          <th v-for="header in headers" :key="header">{{ header }}</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(submission, index) in submissions" :key="index">
-          <td>{{ index + 1 }}</td>
-          <td>{{ submission }}</td>
+        <tr v-for="submission in submissions" :key="submission.id">
+          <td>{{ submission.id }}</td>
+          <td v-for="header in headers" :key="header">{{ submission.data[header] }}</td>
         </tr>
       </tbody>
     </table>
@@ -54,6 +56,7 @@
   th, td {
     border: 1px solid #ddd;
     padding: 8px;
+    text-align: left;
   }
 
   th {
