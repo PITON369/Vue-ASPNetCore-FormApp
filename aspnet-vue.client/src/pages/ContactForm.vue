@@ -43,7 +43,10 @@
         <input type="date" v-model="formData.date" required />
       </div>
 
-      <button type="submit">Send</button>
+      <div class="button-group">
+        <button type="submit">Send</button>
+        <button type="button" @click="sendExampleValues">Send example values</button>
+      </div>
     </form>
 
     <div v-if="submitted" class="thank-you">
@@ -79,6 +82,54 @@
           if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`Error: ${response.status} - ${errorText}`);
+          }
+
+          this.$router.push('/submissions');
+        } catch (error) {
+          console.error('Form error:', error);
+          alert(`Form error: ${error.message}`);
+        }
+      },
+      async sendExampleValues() {
+        const exampleValues = [
+          {
+            name: 'John Doe',
+            email: 'john@example.com',
+            option: 'option1',
+            gender: 'male',
+            agree: true,
+            date: '2023-01-01'
+          },
+          {
+            name: 'Jane Smith',
+            email: 'jane@example.com',
+            option: 'option2',
+            gender: 'female',
+            agree: true,
+            date: '2023-02-01'
+          },
+          {
+            name: 'Alice Johnson',
+            email: 'alice@example.com',
+            option: 'option1',
+            gender: 'female',
+            agree: true,
+            date: '2023-03-01'
+          }
+        ];
+
+        try {
+          for (const example of exampleValues) {
+            const response = await fetch('/api/submissions', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(example),
+            });
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`Error: ${response.status} - ${errorText}`);
+            }
           }
 
           this.$router.push('/submissions');
@@ -136,6 +187,12 @@
     display: flex;
     align-items: center;
     gap: 5px;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
   }
 
   button {

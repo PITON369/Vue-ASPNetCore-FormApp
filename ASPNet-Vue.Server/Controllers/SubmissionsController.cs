@@ -2,10 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using ServerAPI.Data;
 using ServerAPI.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace ServerAPI.Controllers
 {

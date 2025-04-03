@@ -10,11 +10,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Регистрация ApiContext
+// ApiContext registaration
 builder.Services.AddDbContext<ApiContext>(options =>
     options.UseInMemoryDatabase("InMemoryDb"));
 
-// Настройка CORS
+// Configuring CORS
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
@@ -41,11 +41,11 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-// Включение CORS
+// Enabling CORS
 app.UseCors();
 
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
 
-app.Run();
+await app.RunAsync();

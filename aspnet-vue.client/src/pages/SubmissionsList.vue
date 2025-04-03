@@ -1,9 +1,11 @@
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, computed } from 'vue';
 
   const submissions = ref([]);
   const errorMessage = ref('');
   const headers = ref([]);
+  const selectedColumn = ref('');
+  const filterValue = ref('');
 
   onMounted(async () => {
     try {
@@ -21,6 +23,15 @@
       errorMessage.value = 'The data could not be uploaded. Try again later.';
     }
   });
+
+  const filteredSubmissions = computed(() => {
+    return submissions.value.filter(submission => {
+      if (selectedColumn.value && filterValue.value) {
+        return submission.data[selectedColumn.value]?.toString().toLowerCase().includes(filterValue.value.toLowerCase());
+      }
+      return true;
+    });
+  });
 </script>
 
 <template>
@@ -30,20 +41,31 @@
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     <p v-else-if="submissions.length === 0">There are no submitted forms yet.</p>
 
-    <table v-else>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th v-for="header in headers" :key="header">{{ header }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="submission in submissions" :key="submission.id">
-          <td>{{ submission.id }}</td>
-          <td v-for="header in headers" :key="header">{{ submission.data[header] }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div v-else>
+      <div>
+        <label for="column">Filter by Column:</label>
+        <select id="column" v-model="selectedColumn">
+          <option value="">Select Column</option>
+          <option v-for="header in headers" :key="header" :value="header">{{ header }}</option>
+        </select>
+        <input v-if="selectedColumn" v-model="filterValue" placeholder="Filter value..." />
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th v-for="header in headers" :key="header">{{ header }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="submission in filteredSubmissions" :key="submission.id">
+            <td>{{ submission.id }}</td>
+            <td v-for="header in headers" :key="header">{{ submission.data[header] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -66,6 +88,14 @@
   .error {
     color: red;
     font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  label {
+    margin-right: 8px;
+  }
+
+  input, select {
     margin-bottom: 1rem;
   }
 </style>

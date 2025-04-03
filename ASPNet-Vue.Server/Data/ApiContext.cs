@@ -18,8 +18,8 @@ namespace ServerAPI.Data
             modelBuilder.Entity<Submit>()
                 .Property(e => e.Data)
                 .HasConversion(
-                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-                    v => JsonSerializer.Deserialize<Dictionary<string, object>>(v, (JsonSerializerOptions)null));
+                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                    v => JsonSerializer.Deserialize<Dictionary<string, object>>(v, (JsonSerializerOptions.Default)) ?? new Dictionary<string, object>());
         }
     }
 }
